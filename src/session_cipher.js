@@ -231,9 +231,10 @@ class SessionCipher {
         }
         this.fillMessageKeys(chain, message.counter);
         if (!chain.messageKeys.hasOwnProperty(message.counter)) {
+            const messagesKeysIds = Object.keys(chain.messageKeys);
             // Most likely the message was already decrypted and we are trying to process
             // twice.  This can happen if the user restarts before the server gets an ACK.
-            throw new errors.MessageCounterError('Key used already or never filled');
+            throw new errors.MessageCounterError(`Key used already or never filled - counter ${message.counter} in ${messagesKeysIds}`);
         }
         const messageKey = chain.messageKeys[message.counter];
         delete chain.messageKeys[message.counter];
